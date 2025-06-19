@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI4.Events Generator</title>
+</head>
+<body>
+  <h1>Create Your Event or Meme Panel</h1>
+  <form id="eventForm">
+    <label>Type:
+      <select id="mode">
+        <option value="event">Real Event</option>
+        <option value="meme">Meme Panel</option>
+        <option value="hybrid">Hybrid</option>
+      </select>
+    </label><br/>
+    <label>Topic: <input type="text" id="topic" /></label><br/>
+    <label>Audience: <input type="text" id="audience" /></label><br/>
+    <label>Speakers: <input type="number" id="speakers" value="3" /></label><br/>
+    <button type="submit">Generate</button>
+  </form>
+
+  <div id="results" style="display:none;">
+    <h2>Your Event</h2>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    document.getElementById('eventForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const mode = document.getElementById('mode').value;
+      const topic = document.getElementById('topic').value;
+      const audience = document.getElementById('audience').value;
+      const speakers = document.getElementById('speakers').value;
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode, topic, audience, speakers })
+      });
+
+      const data = await response.json();
+      document.getElementById('output').textContent = data.output;
+      document.getElementById('results').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
